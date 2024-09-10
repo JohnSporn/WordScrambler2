@@ -5,8 +5,8 @@
     let fileContent: string[] = [];
     let scrambled = [];
     let answerLength: string[] = [];
-    let solve = '';
-    let solution = '';
+    let solve: string = '';
+    let solution: string = '';
 
     onMount(async () => {
         try {
@@ -24,7 +24,7 @@
         let wordArray = word.split('');
 
         for(let i = 0; i < word.length; i++) {
-            let next = Math.floor(Math.random() * wordArray.length);
+            let next: number = Math.floor(Math.random() * wordArray.length);
             scrambled.push(wordArray[next]);
             wordArray.splice(next, 1);
         }
@@ -40,10 +40,11 @@
         console.log(answerLength.length);
         if(answer.length == answerLength.length) {
             if(answer.join('') == solution) {
-                console.log('Correct!');
+                const winner = document.getElementById('won')!;
+                winner.style.display = "block";
             }
             else {
-                console.log('Please try again');
+                console.log('You lost.');
             }
         }
     };
@@ -60,7 +61,21 @@
     </div>
     <div class="flex flex-row flex-wrap justify-center gap-3">
         {#each answerLength as item}
-            <input id="letter" class="border-2 outline outline-1 w-14 h-20 shadow-lg text-4xl text-center" bind:value={item} on:input={handleInput} maxlength="1" />
+            <input id="letter" class="border-2 outline outline-1 w-14 h-20 shadow-lg text-4xl text-center" 
+                bind:value={item} on:input={handleInput} maxlength="1" />
         {/each}
+    </div>
+</section>
+<section id="won" class="text-center hidden">
+    <div>
+        <h1>Congratulation, you solved it!.</h1>
+    </div>
+    <div>
+        <a href="/" class="border-2 border-slate-700 p-2" data-sveltekit-reload>Play Again</a>
+    </div>
+</section>
+<section id="lost" class="text-center hidden">
+    <div>
+        <h1>Sorry, try again.</h1>
     </div>
 </section>
