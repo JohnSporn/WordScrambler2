@@ -3,14 +3,14 @@
     import "../app.css";
 
     let fileContent: string[] = [];
-    let scrambled = [];
+    let scrambled: any = [];
     let answerLength: string[] = [];
     let solve: string = '';
     let solution: string = '';
 
     onMount(async () => {
         try {
-            const response = await fetch('src/data/words.json');
+            const response: Response = await fetch('src/data/words.json');
             if(!response.ok) {
                 throw new Error(`Response status: ${response.status}`);
             }
@@ -19,9 +19,9 @@
         catch (error: any) {
             console.error(error.message);
         }
-        let random = Math.floor(Math.random() * fileContent.length);
-        let word = fileContent[random];
-        let wordArray = word.split('');
+        let random: number = Math.floor(Math.random() * fileContent.length);
+        let word: string = fileContent[random];
+        let wordArray: string[] = word.split('');
 
         for(let i = 0; i < word.length; i++) {
             let next: number = Math.floor(Math.random() * wordArray.length);
@@ -32,15 +32,15 @@
         solution = word;
         answerLength.length = scrambled.length;
     });
-    let answer = [];
+    let answer: any = [];
     const handleInput = (e: any) => {
-        const value = e.target.value;
+        const value: any = e.target.value;
         answer.push(value);
         console.log(answer.length);
         console.log(answerLength.length);
         if(answer.length == answerLength.length) {
             if(answer.join('') == solution) {
-                const winner = document.getElementById('won')!;
+                const winner = document.getElementById('won') as HTMLElement;
                 winner.style.display = "block";
             }
             else {
@@ -49,6 +49,15 @@
         }
     };
 
+    const deleteValue = (e: any) => {
+        const input = document.getElementById('letter') as HTMLInputElement;
+            if(e.key == "Backspace") {
+                console.log('hello');
+                const previous = input.previousElementSibling as HTMLInputElement;
+                previous.textContent = "";
+                previous.focus();
+            }
+    }
 </script>
 
 <section class="container mx-auto text-center">
@@ -62,7 +71,7 @@
     <div class="flex flex-row flex-wrap justify-center gap-3">
         {#each answerLength as item}
             <input id="letter" class="border-2 outline outline-1 w-14 h-20 shadow-lg text-4xl text-center" 
-                bind:value={item} on:input={handleInput} maxlength="1" />
+                bind:value={item} on:input={handleInput} on:keydown={deleteValue} maxlength="1" />
         {/each}
     </div>
 </section>
