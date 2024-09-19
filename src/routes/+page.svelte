@@ -3,7 +3,7 @@
 	import '../app.css';
 
 	let fileContent: string[] = [];
-	let scrambled: any = [];
+	let scrambled: string[] = [];
 	let answerLength: string[] = [];
 	let solve: string = '';
 	let solution: string = '';
@@ -15,8 +15,8 @@
 				throw new Error(`Response status: ${response.status}`);
 			}
 			fileContent = await response.json();
-		} catch (error: any) {
-			console.error(error.message);
+		} catch (error) {
+			console.error(error);
 		}
 		let random: number = Math.floor(Math.random() * fileContent.length);
 		let word: string = fileContent[random];
@@ -31,7 +31,7 @@
 		solution = word;
 		answerLength.length = scrambled.length;
 	});
-	let answer: any = [];
+	let answer: string[] = [];
 	const handleInput = (e: KeyboardEvent) => {
         const inputElement = e.target as HTMLInputElement;
 		const active: HTMLElement = document.activeElement as HTMLElement;
