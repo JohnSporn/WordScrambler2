@@ -31,26 +31,19 @@
 		solution = word;
 		answerLength = new Array(scrambled.length).fill('');
 	});
-	let answer: string[] = [];
-	const handleInput = (e: KeyboardEvent) => {
+	const handleInput = (e: Event) => {
 		const inputElement = e.target as HTMLInputElement;
 		const active: HTMLElement = document.activeElement as HTMLElement;
-		if (e.key !== 'Backspace') {
-			answer.push(inputElement.value);
-			console.log(answer.length);
-			if (active.nextElementSibling) {
-				(active.nextElementSibling as HTMLInputElement).focus();
-			}
-		} else if (e.key === 'Backspace') {
-			answer.pop();
-			inputElement.value = '';
-			console.log(answer.length);
-			if (active.previousElementSibling) {
-				(active.previousElementSibling as HTMLInputElement).focus();
-			}
+
+		// Move to next input if we typed a character
+		if (inputElement.value && active.nextElementSibling) {
+			(active.nextElementSibling as HTMLInputElement).focus();
 		}
-		if (answer.length == answerLength.length) {
-			if (answer.join('') == solution) {
+
+		// Check if we've filled all inputs
+		const filledCount = answerLength.filter((val) => val.length > 0).length;
+		if (filledCount === answerLength.length) {
+			if (answerLength.join('') === solution) {
 				const winner = document.getElementById('won') as HTMLElement;
 				winner.style.display = 'block';
 			} else {
@@ -59,6 +52,22 @@
 				setTimeout(() => {
 					loser.style.display = 'none';
 				}, 5000);
+			}
+		}
+	};
+
+	const handleKeydown = (e: KeyboardEvent) => {
+		const inputElement = e.target as HTMLInputElement;
+		const active: HTMLElement = document.activeElement as HTMLElement;
+
+		if (e.key === 'Backspace') {
+			// If current input is empty, move to previous and clear it
+			if (!inputElement.value && active.previousElementSibling) {
+				e.preventDefault();
+				const prevInput = active.previousElementSibling as HTMLInputElement;
+				const prevIndex = parseInt(prevInput.id);
+				answerLength[prevIndex] = '';
+				prevInput.focus();
 			}
 		}
 	};
@@ -78,7 +87,8 @@
 				id={`${index}`}
 				class="border-2 outline outline-1 w-14 h-20 shadow-lg text-4xl text-center"
 				bind:value={item}
-				on:keydown={handleInput}
+				on:input={handleInput}
+				on:keydown={handleKeydown}
 				maxlength="1"
 			/>
 		{/each}
