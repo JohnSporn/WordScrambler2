@@ -10,7 +10,7 @@
 
 	onMount(async () => {
 		try {
-			const response: Response = await fetch('src/data/words.json');
+			const response: Response = await fetch('/words.json');
 			if (!response.ok) {
 				throw new Error(`Response status: ${response.status}`);
 			}
@@ -29,11 +29,11 @@
 		}
 		solve = scrambled.join('');
 		solution = word;
-		answerLength.length = scrambled.length;
+		answerLength = new Array(scrambled.length).fill('');
 	});
 	let answer: string[] = [];
 	const handleInput = (e: KeyboardEvent) => {
-        const inputElement = e.target as HTMLInputElement;
+		const inputElement = e.target as HTMLInputElement;
 		const active: HTMLElement = document.activeElement as HTMLElement;
 		if (e.key !== 'Backspace') {
 			answer.push(inputElement.value);
@@ -43,7 +43,7 @@
 			}
 		} else if (e.key === 'Backspace') {
 			answer.pop();
-            inputElement.value == "";
+			inputElement.value = '';
 			console.log(answer.length);
 			if (active.previousElementSibling) {
 				(active.previousElementSibling as HTMLInputElement).focus();
@@ -86,7 +86,7 @@
 </section>
 <section id="won" class="text-center hidden">
 	<div>
-		<h1>Congratulation, you solved it!.</h1>
+		<h1>Congratulations, you solved it!</h1>
 	</div>
 	<div>
 		<a href="/" class="border-2 border-slate-700 p-2" data-sveltekit-reload>Play Again</a>
